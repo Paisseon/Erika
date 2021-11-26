@@ -1,2 +1,1 @@
-# Erika
-iOS 13-14 tweak downloader for Sileo
+Erika is currently in beta! I will open source when the beta is done ^^
