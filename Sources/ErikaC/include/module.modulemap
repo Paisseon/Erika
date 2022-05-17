@@ -1,0 +1,4 @@
+module ErikaC {
+    umbrella "."
+    export *
+}

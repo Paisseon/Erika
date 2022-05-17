@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>items</key>
+		<array>
+		
+			<!-- header -->
+		
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>condensed</key>
+				<true/>
+				<key>headerCellClass</key>
+				<string>HBPackageNameHeaderCell</string>
+				<key>packageNameOverride</key>
+				<string>Erika</string>
+				<key>icon</key>
+				<string>ic0n.png</string>
+				<key>packageIdentifier</key>
+				<string>emt.paisseon.erika</string>
+			</dict>
+			
+		
+			<!-- basic feature toggles -->
+			
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>General</string>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>emt.paisseon.erika.prefschanged</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>emt.paisseon.erika</string>
+				<key>key</key>
+				<string>enabled</string>
+				<key>label</key>
+				<string>Enable</string>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>emt.paisseon.erika.prefschanged</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>emt.paisseon.erika</string>
+				<key>key</key>
+				<string>enableSileo</string>
+				<key>label</key>
+				<string>Enable in Sileo</string>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>emt.paisseon.erika.prefschanged</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>emt.paisseon.erika</string>
+				<key>key</key>
+				<string>enableSaily</string>
+				<key>label</key>
+				<string>Enable in Saily</string>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>emt.paisseon.erika.prefschanged</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<false/>
+				<key>defaults</key>
+				<string>emt.paisseon.erika</string>
+				<key>key</key>
+				<string>useCyDown</string>
+				<key>label</key>
+				<string>Use CyDown Folder</string>
+			</dict>
+			
+			<!-- links to my stuff -->
+			
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Links</string>
+			</dict>
+			<dict>
+				<key>cellClass</key>
+				<string>HBLinkTableCell</string>
+				<key>iconURL</key>
+				<string>https://avatars.githubusercontent.com/u/68789766</string>
+				<key>label</key>
+				<string>Source Code</string>
+				<key>subtitle</key>
+				<string>View on GitHub</string>
+				<key>url</key>
+				<string>https://github.com/paisseon/erika</string>
+			</dict>
+			<dict>
+				<key>cellClass</key>
+				<string>HBLinkTableCell</string>
+				<key>iconURL</key>
+				<string>https://cdn.discordapp.com/icons/869579480375623720/a_0661a099789abaa5df7d2a18962a5d06.jpg</string>
+				<key>label</key>
+				<string>Join CyPwn</string>
+				<key>subtitle</key>
+				<string>The best jailbreak Discord server</string>
+				<key>url</key>
+				<string>https://discord.gg/cZ2gBRZvwW</string>
+			</dict>
+			
+			<!-- in my hand is a pen that will write a poem of me and you -->
+			
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>footerText</key>
+				<string>
+	To dream of dreaming and know of knowing
+	The delicate dance of song and still
+	
+	To coalesce in absence and evanesce in presence
+	Sunrise, sunset, twilight, still kept</string>
+			</dict>
+			
+		</array>
+		<key>title</key>
+		<string>Erika</string>
+	</dict>
+</plist>
