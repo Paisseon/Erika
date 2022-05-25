@@ -14,13 +14,13 @@ class SileoHook: ClassHook<UIImageView> {
 			
 			ErikaController.shared.refreshSileoInfo(thisStack)                                                 // get current tweak info
 			target.isUserInteractionEnabled = true                                                             // allow it to be tapped
-			let tapGesture = UITapGestureRecognizer(target: target, action: #selector(self.erikaDownload(_:))) // create a gesture recogniser
+			let tapGesture = UITapGestureRecognizer(target: target, action: #selector(self.erikaDownload)) // create a gesture recogniser
 			target.addGestureRecognizer(tapGesture)                                                            // add it to the view
 		}
 	}
 	
 	// orion:new
-	@objc func erikaDownload(_ sender: UIButton) {
+	@objc func erikaDownload() {
 		guard let package = ErikaController.shared.sileoInfo?.components(separatedBy: " ")[0] else {
 			return
 		} // get the bundle id

@@ -45,6 +45,34 @@
 				<key>label</key>
 				<string>Enable</string>
 			</dict>
+            <dict>
+                <key>PostNotification</key>
+                <string>emt.paisseon.erika.prefschanged</string>
+                <key>cell</key>
+                <string>PSSwitchCell</string>
+                <key>default</key>
+                <true/>
+                <key>defaults</key>
+                <string>emt.paisseon.erika</string>
+                <key>key</key>
+                <string>enableInstaller</string>
+                <key>label</key>
+                <string>Enable in Installer 5</string>
+            </dict>
+            <dict>
+                <key>PostNotification</key>
+                <string>emt.paisseon.erika.prefschanged</string>
+                <key>cell</key>
+                <string>PSSwitchCell</string>
+                <key>default</key>
+                <true/>
+                <key>defaults</key>
+                <string>emt.paisseon.erika</string>
+                <key>key</key>
+                <string>enableSaily</string>
+                <key>label</key>
+                <string>Enable in Saily</string>
+            </dict>
 			<dict>
 				<key>PostNotification</key>
 				<string>emt.paisseon.erika.prefschanged</string>
@@ -59,20 +87,20 @@
 				<key>label</key>
 				<string>Enable in Sileo</string>
 			</dict>
-			<dict>
-				<key>PostNotification</key>
-				<string>emt.paisseon.erika.prefschanged</string>
-				<key>cell</key>
-				<string>PSSwitchCell</string>
-				<key>default</key>
-				<true/>
-				<key>defaults</key>
-				<string>emt.paisseon.erika</string>
-				<key>key</key>
-				<string>enableSaily</string>
-				<key>label</key>
-				<string>Enable in Saily</string>
-			</dict>
+            <dict>
+                <key>PostNotification</key>
+                <string>emt.paisseon.erika.prefschanged</string>
+                <key>cell</key>
+                <string>PSSwitchCell</string>
+                <key>default</key>
+                <true/>
+                <key>defaults</key>
+                <string>emt.paisseon.erika</string>
+                <key>key</key>
+                <string>enableZebra</string>
+                <key>label</key>
+                <string>Enable in Zebra</string>
+            </dict>
 			<dict>
 				<key>PostNotification</key>
 				<string>emt.paisseon.erika.prefschanged</string>

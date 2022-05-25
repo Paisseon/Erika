@@ -1,1 +1,1 @@
-{ Filter = { Bundles = ( "org.coolstar.SileoStore", "wiki.qaq.chromatic.release" ); }; }
+{ Filter = { Bundles = ( "org.coolstar.SileoStore", "wiki.qaq.chromatic.release", "xyz.willy.Zebra", "me.apptapp.installer" ); }; }

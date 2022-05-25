@@ -24,12 +24,12 @@ class SailyHook: ClassHook<UIView> {
 		orig.didMoveToWindow()
 		
 		target.subviews[0].isUserInteractionEnabled = true                                                             // allow it to be tapped
-		let tapGesture = UITapGestureRecognizer(target: target, action: #selector(self.erikaDownload(_:))) // create a gesture recogniser
+		let tapGesture = UITapGestureRecognizer(target: target, action: #selector(self.erikaDownload)) // create a gesture recogniser
 		target.subviews[0].addGestureRecognizer(tapGesture)                                                            // add it to the view
 	}
 	
 	// orion:new
-	@objc func erikaDownload(_ sender: UIButton) {
+	@objc func erikaDownload() {
 		guard let control = UIPasteboard.general.string else {
 			return
 		} // get the contents of clipboard. if the user is literate this will contain the control file for the current tweak
