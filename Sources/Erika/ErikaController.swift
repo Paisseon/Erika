@@ -17,36 +17,30 @@ class ErikaController: ObservableObject {
     
     private init() {}
     
-    public func displayGui(withTitle package: String, version: String) {
+    public func displayGui(withTitle package: String, version: String, viewController: UIViewController? = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController) {
         error = "Task failed successfully!"
         status = linkStart(package, version)
         
-        if status { // if the tweak was successfully downloaded
-            gui = UIHostingController(rootView: ErikaGuiView("✅ Success", "<Very good>, downloading \(package) now", true))
-        } else {    // if the tweak failed to download
-            gui = UIHostingController(rootView: ErikaGuiView("❎ Error", error, false))
-        }
+        gui = status ? UIHostingController(rootView: ErikaGuiView("✅ Success", "Download completed! Click \"Get Zappy\" to open in Filza.", true)) : UIHostingController(rootView: ErikaGuiView("❎ Error", error, false))
         
-        gui.view.backgroundColor   = UIColor.clear
+        gui.view.backgroundColor   = .clear
         gui.modalPresentationStyle = .formSheet
         gui.view.layer.cornerCurve = .continuous
         
-        UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController?.present(gui, animated: true)
+        viewController?.present(gui, animated: true)
     }
     
     public func refreshSileoInfo(_ tarView: UIView?) {
         sileoInfo = (tarView?.superview?.subviews.last?.subviews.last?.subviews.first as? UILabel)?.text // grab the text from the bundle id label at the bottom of depiction
     }
     
-    // some information is censored here for some reason, idk. meep wanted me to.
-    
-    private func linkStart(_ package: String, _ version: String) -> Bool {
+    public func linkStart(_ package: String, _ version: String) -> Bool {
         if !FileManager.default.fileExists(atPath: downloadPath) {
             self.error = "Could not find Erika destination"
             return false
         }
     
-        guard let r1Url = URL(string: "http://example.com/\(package)_v\(version)_iphoneos-arm.deb") else {
+        guard let r1Url = URL(string: "http://REDACTED/\(package)_v\(version)_iphoneos-arm.deb") else {
             self.error = "Could not create r1Url for \(package)"
             return false
         } // get a url to the original download page
@@ -63,21 +57,21 @@ class ErikaController: ObservableObject {
         
         let fileId = r1[r1Range] // try to find the first series of 10 integers ending in .deb, which we need because it is how future requests identify the tweak
         
-        let r2Token = "token" // some token or another, meep probably knows what this does
+        let r2Token = "&__RequestVerificationToken=REDACTED" // some token or another, meep probably knows what this does
         
         let r2Data = "fileId=\(fileId)\(r2Token)".data(using: .utf8) // the body data we send
         
-        guard let r2Url = URL(string: "http://example.com/License") else {
+        guard let r2Url = URL(string: "http:/REDACTED/Download") else {
             self.error = "Could not connect to license server"
             return false
-        } // this is the second step. normally <censored> would stop downloads without the proper authorisation so we have to create fake credentials below
+        } // this is the second step. normally [REDACTED] would stop downloads without the proper authorisation so we have to create fake credentials below
         
         var r2 = URLRequest(url: r2Url)
         
         r2.httpMethod = "POST"                                                // use post, we are sending data to the server
         r2.httpBody   = r2Data                                                // i'll tell you what i want, what i really really want
         r2.setValue("XMLHttpRequest", forHTTPHeaderField: "X-Requested-With") // idk what this does tbh
-        r2.setValue("cookie", forHTTPHeaderField: "Cookie") // again, thanks to meep for the cookie. this is how we trick <censored> into thinking we are allowed to download the file
+        r2.setValue("REDACTED", forHTTPHeaderField: "Cookie") // again, thanks to meep for the cookie. this is how we trick [REDACTED] into thinking we are allowed to download the file
         
         var response  = Data()
         let semaphore = DispatchSemaphore(value:0) // https://stackoverflow.com/a/44075185

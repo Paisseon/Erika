@@ -104,6 +104,7 @@ struct ErikaGuiView: View {
                     }
                     
                     Text("\nTweak is downloading, please wait warmly...")
+                        .foregroundColor(.white)
                         .onAppear {
                             isDownloaded()
                         }
@@ -130,6 +131,6 @@ class Erika: Tweak {
             Zebra().activate()
         }
         
-        ErikaController.shared.downloadPath = Preferences.shared.useCyDown.boolValue ? "/var/mobile/Documents/CyDown" : "/var/mobile/Erika"
+        ErikaController.shared.downloadPath = Preferences.shared.useCyDown.boolValue ? "/var/mobile/Documents/CyDown" : "/var/mobile/Media/Erika"
     }
 }
