@@ -132,5 +132,13 @@ class Erika: Tweak {
         }
         
         ErikaController.shared.downloadPath = Preferences.shared.useCyDown.boolValue ? "/var/mobile/Documents/CyDown" : "/var/mobile/Media/Erika"
+        
+        if !FileManager.default.fileExists(atPath: ErikaController.shared.downloadPath) {
+            do {
+                try FileManager.default.createDirectory(atPath: ErikaController.shared.downloadPath, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                return
+            }
+        }
     }
 }

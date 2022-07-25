@@ -1,6 +1,6 @@
 Package: emt.paisseon.erika
 Name: Erika
-Version: 1.8.3
+Version: 1.8.4
 Architecture: iphoneos-arm
 Description: Paid tweaks for free on Installer, Saily, Sileo, and Zebra
 Maintainer: Paisseon
@@ -9,4 +9,4 @@ Section: Tweaks
 Depends: ${ORION}, firmware (>= 13.0), ws.hbang.common (>= 1.17)
 Icon: https://paisseon.github.io/icons/erika.png
 SileoDepiction: https://paisseon.github.io/depictions/erika.json
-Depiction: https://paisseon.github.io/depictions/ButNobodyCame.html
+Depiction: https://pinpal.github.io/Sileo-Depiction-WebViews/?json=https://paisseon.github.io/depictions/erika.json&name=Erika&dev=Paisseon

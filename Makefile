@@ -7,7 +7,7 @@ DEBUG = 0
 THEOS_LEAN_AND_MEAN = 1
 GO_EASY_ON_ME = 1
 
-INSTALL_TARGET_PROCESSES = SpringBoard
+INSTALL_TARGET_PROCESSES = chromatic
 
 TWEAK_NAME = Erika
 $(TWEAK_NAME)_FILES = $(shell find Sources/$(TWEAK_NAME) -name '*.swift') $(shell find Sources/$(TWEAK_NAME)C -name '*.m' -o -name '*.c' -o -name '*.mm' -o -name '*.cpp')

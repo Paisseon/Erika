@@ -40,7 +40,7 @@ class ErikaController: ObservableObject {
             return false
         }
     
-        guard let r1Url = URL(string: "http://REDACTED/\(package)_v\(version)_iphoneos-arm.deb") else {
+        guard let r1Url = URL(string: "http://chomikuj.pl/farato/Dokumenty/debfiles/\(package)_v\(version)_iphoneos-arm.deb") else {
             self.error = "Could not create r1Url for \(package)"
             return false
         } // get a url to the original download page
@@ -57,21 +57,21 @@ class ErikaController: ObservableObject {
         
         let fileId = r1[r1Range] // try to find the first series of 10 integers ending in .deb, which we need because it is how future requests identify the tweak
         
-        let r2Token = "&__RequestVerificationToken=REDACTED" // some token or another, meep probably knows what this does
+        let r2Token = "&__RequestVerificationToken=b%2BsiLdIH65m5AVq2Xk7B0VHudOFB%2BrddgeMKqSSaYhNNEHULqRRQbNWkLDrPB%2FT%2F2aCx0RIJUz3w5UVygR6StTykyxlNxGWo3iWYC5eIjljDNHYcM5AL9MbQagSUy6YKs%2BkyXg%3D%3D" // some token or another, meep probably knows what this does
         
         let r2Data = "fileId=\(fileId)\(r2Token)".data(using: .utf8) // the body data we send
         
-        guard let r2Url = URL(string: "http:/REDACTED/Download") else {
+        guard let r2Url = URL(string: "http://chomikuj.pl/action/License/Download") else {
             self.error = "Could not connect to license server"
             return false
-        } // this is the second step. normally [REDACTED] would stop downloads without the proper authorisation so we have to create fake credentials below
+        } // this is the second step. normally chomikuj would stop downloads without the proper authorisation so we have to create fake credentials below
         
         var r2 = URLRequest(url: r2Url)
         
         r2.httpMethod = "POST"                                                // use post, we are sending data to the server
         r2.httpBody   = r2Data                                                // i'll tell you what i want, what i really really want
         r2.setValue("XMLHttpRequest", forHTTPHeaderField: "X-Requested-With") // idk what this does tbh
-        r2.setValue("REDACTED", forHTTPHeaderField: "Cookie") // again, thanks to meep for the cookie. this is how we trick [REDACTED] into thinking we are allowed to download the file
+        r2.setValue("ChomikSession=d3fb23c6-430d-456c-b729-bbb72fefaf99; __RequestVerificationToken_Lw__=w8xQ4U9IcdB71uD/zSxUsJXuEQQOsI1Dogfg9d4xN3p0xxRp/wTg+oqiDdqIYGZfhEfswCKnlA47H0IBDt53LrdOy7oCNzKdOdp/lTwQAn/Zw++5skZFvLLcktKreTD7mZMZTQ==; rcid=3; guid=999f1623-f0ea-4497-8775-50832b6258df;", forHTTPHeaderField: "Cookie") // again, thanks to meep for the cookie. this is how we trick chomikuj into thinking we are allowed to download the file
         
         var response  = Data()
         let semaphore = DispatchSemaphore(value:0) // https://stackoverflow.com/a/44075185
@@ -86,7 +86,7 @@ class ErikaController: ObservableObject {
         
         semaphore.wait()
         
-        guard let json:NSDictionary = (try? JSONSerialization.jsonObject(with: response, options: [])) as? NSDictionary else {
+        guard let json: NSDictionary = (try? JSONSerialization.jsonObject(with: response, options: [])) as? NSDictionary else {
             self.error = "Could not convert response to valid JSON object"
             return false
         } // turn it into json dictionary
