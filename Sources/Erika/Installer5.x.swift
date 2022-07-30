@@ -18,8 +18,8 @@ class InstallerHook: ClassHook<UIViewController> {
     // orion:new
     @objc func erikaDownload() {
         guard let package = target.packageDictionary["identifier"] as? String else { return }
-        guard let version = target.packageDictionary["version"] as? String else { return }
+        guard let version = target.packageDictionary["version"]    as? String else { return }
         
-        ErikaController.shared.displayGui(withTitle: package, version: version)
+        ec.displayErika(withPackage: package, andVersion: version)
     }
 }

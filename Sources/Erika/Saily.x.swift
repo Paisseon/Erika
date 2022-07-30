@@ -28,13 +28,13 @@ class SailyHook: ClassHook<UIViewController> {
     
     // orion:new
     @objc func erikaDownload() {
-        guard let control                           = UIPasteboard.general.string, control.contains("package:"), control.contains("version"),
+        guard let control = UIPasteboard.general.string, control.contains("package:"), control.contains("version"),
               let packageRange: Range<String.Index> = control.range(of: #"(?<=package:\s)[^\s]*\b"#, options: .regularExpression),
               let versionRange: Range<String.Index> = control.range(of: #"(?<=version:\s)[^\s]*\b"#, options: .regularExpression) else { return }
         
         let package = String(control[packageRange])
         let version = String(control[versionRange])
         
-        ErikaController.shared.displayGui(withTitle: package, version: version, viewController: target)
+        ec.displayErika(withPackage: package, andVersion: version, inVC: target)
     }
 }

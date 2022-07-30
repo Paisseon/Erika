@@ -1,121 +1,150 @@
-import ErikaC
-import UIKit
-import SwiftUI
 import Cephei
+import ErikaC
+import SwiftUI
+import UIKit
 
-class ErikaController: ObservableObject {
+final class ErikaController: ObservableObject {
     static let shared = ErikaController()
     
-    public var status             = false
-    public var error              = "Task failed successfully!"
-    public var sileoInfo: String? = ""
-    public var downloadPath       = ""
-    public var debPath            = ""
-    public var gui                = UIHostingController(rootView: ErikaGuiView("🍓 Panic!", "Task failed successfully!", false))
+    // Status for SwiftUI to track
     
-    @Published var holding        = true
+    @Published var isHolding = true
+    @Published var isSuccess = false
+    @Published var error     = "Task failed successfully!"
+    
+    // Various vars
+    
+    public var sileoInfo = ""
+    public var dlPath    = ""
+    public var debPath   = ""
+    public var gui       = UIHostingController(rootView: ErikaView())
     
     private init() {}
     
-    public func displayGui(withTitle package: String, version: String, viewController: UIViewController? = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController) {
-        error = "Task failed successfully!"
-        status = linkStart(package, version)
+    // Present the GUI view once Erika has been activated
+    
+    public func displayErika(withPackage package: String, andVersion version: String, inVC viewController: UIViewController? = UIApplication.shared.windows.filter{$0.isKeyWindow}.first?.rootViewController) {
+        error     = "Task failed successfully"
+        isHolding = true
+        isSuccess = false
         
-        gui = status ? UIHostingController(rootView: ErikaGuiView("✅ Success", "Download completed! Click \"Get Zappy\" to open in Filza.", true)) : UIHostingController(rootView: ErikaGuiView("❎ Error", error, false))
+        gui = UIHostingController(rootView: ErikaView())
         
         gui.view.backgroundColor   = .clear
         gui.modalPresentationStyle = .formSheet
         gui.view.layer.cornerCurve = .continuous
         
-        viewController?.present(gui, animated: true)
-    }
-    
-    public func refreshSileoInfo(_ tarView: UIView?) {
-        sileoInfo = (tarView?.superview?.subviews.last?.subviews.last?.subviews.first as? UILabel)?.text // grab the text from the bundle id label at the bottom of depiction
-    }
-    
-    public func linkStart(_ package: String, _ version: String) -> Bool {
-        if !FileManager.default.fileExists(atPath: downloadPath) {
-            self.error = "Could not find Erika destination"
-            return false
-        }
-    
-        guard let r1Url = URL(string: "http://chomikuj.pl/farato/Dokumenty/debfiles/\(package)_v\(version)_iphoneos-arm.deb") else {
-            self.error = "Could not create r1Url for \(package)"
-            return false
-        } // get a url to the original download page
-        
-        guard let r1 = try? String(contentsOf: r1Url, encoding: String.Encoding.utf8) else {
-            self.error = "\(package) (\(version)) was not found on server"
-            return false
-        } // get the html
-        
-        guard let r1Range: Range<String.Index> = r1.range(of: #"\d{10}(?=.d)"#, options: .regularExpression) else {
-            self.error = "\(package) does not have a valid FileId"
-            return false
+        if viewController?.presentedViewController !== gui {
+            viewController?.present(gui, animated: true)
         }
         
-        let fileId = r1[r1Range] // try to find the first series of 10 integers ending in .deb, which we need because it is how future requests identify the tweak
+        linkStart(package, version)
+    }
+    
+    // Get the contents of the info box in Sileo from another view
+    
+    public func refreshSileoInfo(for tarView: UIView?) {
+        sileoInfo = (tarView?.superview?.subviews.last?.subviews.last?.subviews.first as? UILabel)?.text ?? ""
+    }
+    
+    // Download the .deb file from CyDown's server
+    
+    public func linkStart(_ package: String, _ version: String) {
+        isHolding = true
+        isSuccess = false
         
-        let r2Token = "&__RequestVerificationToken=b%2BsiLdIH65m5AVq2Xk7B0VHudOFB%2BrddgeMKqSSaYhNNEHULqRRQbNWkLDrPB%2FT%2F2aCx0RIJUz3w5UVygR6StTykyxlNxGWo3iWYC5eIjljDNHYcM5AL9MbQagSUy6YKs%2BkyXg%3D%3D" // some token or another, meep probably knows what this does
-        
-        let r2Data = "fileId=\(fileId)\(r2Token)".data(using: .utf8) // the body data we send
-        
-        guard let r2Url = URL(string: "http://chomikuj.pl/action/License/Download") else {
-            self.error = "Could not connect to license server"
-            return false
-        } // this is the second step. normally chomikuj would stop downloads without the proper authorisation so we have to create fake credentials below
-        
-        var r2 = URLRequest(url: r2Url)
-        
-        r2.httpMethod = "POST"                                                // use post, we are sending data to the server
-        r2.httpBody   = r2Data                                                // i'll tell you what i want, what i really really want
-        r2.setValue("XMLHttpRequest", forHTTPHeaderField: "X-Requested-With") // idk what this does tbh
-        r2.setValue("ChomikSession=d3fb23c6-430d-456c-b729-bbb72fefaf99; __RequestVerificationToken_Lw__=w8xQ4U9IcdB71uD/zSxUsJXuEQQOsI1Dogfg9d4xN3p0xxRp/wTg+oqiDdqIYGZfhEfswCKnlA47H0IBDt53LrdOy7oCNzKdOdp/lTwQAn/Zw++5skZFvLLcktKreTD7mZMZTQ==; rcid=3; guid=999f1623-f0ea-4497-8775-50832b6258df;", forHTTPHeaderField: "Cookie") // again, thanks to meep for the cookie. this is how we trick chomikuj into thinking we are allowed to download the file
-        
-        var response  = Data()
-        let semaphore = DispatchSemaphore(value:0) // https://stackoverflow.com/a/44075185
-        
-        URLSession.shared.dataTask(with: r2) { (data, responsee, error) in
-            if let data = data {
-                response = data
+        DispatchQueue.global(qos: .userInitiated).async {
+            if !FileManager.default.fileExists(atPath: self.dlPath) {
+                self.error = "Erika destination doesn't exist: \(self.dlPath)"
+                self.isHolding = false
+                return
             }
             
-            semaphore.signal()
-        }.resume()
-        
-        semaphore.wait()
-        
-        guard let json: NSDictionary = (try? JSONSerialization.jsonObject(with: response, options: [])) as? NSDictionary else {
-            self.error = "Could not convert response to valid JSON object"
-            return false
-        } // turn it into json dictionary
-        
-        guard let redirect = json["redirectUrl"] as? String else {
-            self.error = "Could not authenticate download for \(package)"
-            return false
-        } // the most important part! this is a ddl to the deb file
-        
-        guard let r3 = URL(string: redirect) else {
-            self.error = "\(package) does not have a valid DDL"
-            return false
-        }
-        
-        DispatchQueue.global(qos: .utility).async { // download in the background so we don't block main thread
-            self.holding = true
-        
+            guard let r1Url = URL(string: "http://chomikuj.pl/farato/Dokumenty/debfiles/\(package)_v\(version)_iphoneos-arm.deb") else {
+                self.error = "Could not create r1Url for \(package)"
+                self.isHolding = false
+                return
+            }
+            
+            guard let r1 = try? String(contentsOf: r1Url, encoding: String.Encoding.utf8) else {
+                self.error = "\(package) (\(version)) was not found on server"
+                self.isHolding = false
+                return
+            }
+            
+            guard let r1Range: Range<String.Index> = r1.range(of: #"\d{10}(?=.d)"#, options: .regularExpression) else {
+                self.error = "\(package) does not have a valid FileId"
+                self.isHolding = false
+                return
+            }
+            
+            let fileId = r1[r1Range]
+            
+            let r2Token = "&__RequestVerificationToken=b%2BsiLdIH65m5AVq2Xk7B0VHudOFB%2BrddgeMKqSSaYhNNEHULqRRQbNWkLDrPB%2FT%2F2aCx0RIJUz3w5UVygR6StTykyxlNxGWo3iWYC5eIjljDNHYcM5AL9MbQagSUy6YKs%2BkyXg%3D%3D"
+            
+            let r2Data = "fileId=\(fileId)\(r2Token)".data(using: .utf8)
+            
+            guard let r2Url = URL(string: "http://chomikuj.pl/action/License/Download") else {
+                self.error = "Could not connect to license server"
+                self.isHolding = false
+                return
+            }
+            
+            var r2 = URLRequest(url: r2Url)
+            
+            r2.httpMethod = "POST"
+            r2.httpBody   = r2Data
+            r2.setValue("XMLHttpRequest", forHTTPHeaderField: "X-Requested-With")
+            r2.setValue("ChomikSession=d3fb23c6-430d-456c-b729-bbb72fefaf99; __RequestVerificationToken_Lw__=w8xQ4U9IcdB71uD/zSxUsJXuEQQOsI1Dogfg9d4xN3p0xxRp/wTg+oqiDdqIYGZfhEfswCKnlA47H0IBDt53LrdOy7oCNzKdOdp/lTwQAn/Zw++5skZFvLLcktKreTD7mZMZTQ==; rcid=3; guid=999f1623-f0ea-4497-8775-50832b6258df;", forHTTPHeaderField: "Cookie")
+            
+            var response  = Data()
+            let semaphore = DispatchSemaphore(value:0)
+            
+            URLSession.shared.dataTask(with: r2) { (data, responsee, error) in
+                if let data = data {
+                    response = data
+                }
+                
+                semaphore.signal()
+            }.resume()
+            
+            semaphore.wait()
+            
+            guard let json: NSDictionary = (try? JSONSerialization.jsonObject(with: response, options: [])) as? NSDictionary else {
+                self.error = "Could not convert response to valid JSON object"
+                self.isHolding = false
+                return
+            }
+            
+            guard let redirect = json["redirectUrl"] as? String else {
+                self.error = "Could not authenticate download for \(package)"
+                self.isHolding = false
+                return
+            }
+            
+            guard let r3 = URL(string: redirect) else {
+                self.error = "\(package) does not have a valid DDL"
+                self.isHolding = false
+                return
+            }
+            
             guard let deb = try? Data(contentsOf: r3) else {
                 self.error = "Could not complete download for \(package)"
+                self.isHolding = false
                 return
-            } // get the tweak as raw data
+            }
             
-            self.debPath = "\(self.downloadPath)/\(package)_\(version)_iphoneos-arm.deb"
+            self.debPath = "\(self.dlPath)/\(package)_\(version)_iphoneos-arm.deb"
             
-            NSData(data: deb).write(toFile: self.debPath, atomically: true) // pipe it to a file
+            do {
+                try NSData(data: deb).write(toFile: self.debPath)
+            } catch {
+                self.error = "Failed to pipe .deb to file"
+                self.isHolding = false
+            }
             
-            self.holding = false
+            self.isSuccess = true
+            self.isHolding = false
         }
-        
-        return true // if nothing failed, mark it as a success
     }
 }

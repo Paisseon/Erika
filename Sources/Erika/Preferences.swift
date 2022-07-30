@@ -1,17 +1,25 @@
 import Cephei
 
-class Preferences {
-	static let shared = Preferences() // shared instance so we can check these values from the erika class
+final class Preferences {
+	static let shared = Preferences()
 	
-	private let preferences                     = HBPreferences(identifier: "emt.paisseon.erika")
-	private(set) var enabled         : ObjCBool = true
-	private(set) var enableSileo     : ObjCBool = true
-	private(set) var enableSaily     : ObjCBool = true
-    private(set) var enableZebra     : ObjCBool = true
-    private(set) var enableInstaller : ObjCBool = true
-	private(set) var useCyDown       : ObjCBool = false
+	private let preferences = HBPreferences(identifier: "emt.paisseon.erika")
+    
+    private(set) var enabled         = true
+    private(set) var enableSaily     = true
+    private(set) var enableSileo     = true
+    private(set) var enableInstaller = true
+    private(set) var enableZebra     = true
+    private(set) var useCyDown       = true
+    
+	private var enabledI         : ObjCBool = true
+	private var enableSileoI     : ObjCBool = true
+	private var enableSailyI     : ObjCBool = true
+    private var enableZebraI     : ObjCBool = true
+    private var enableInstallerI : ObjCBool = true
+	private var useCyDownI       : ObjCBool = false
 	
-	private init() { // various cephei stuff
+	private init() {
 		preferences.register(defaults: [
 			"enabled"         : true,
 			"enableSileo"     : true,
@@ -19,14 +27,20 @@ class Preferences {
             "enableZebra"     : true,
             "enableInstaller" : true,
 			"useCyDown"       : false,
-			"shareSheet"      : false,
 		])
 	
-		preferences.register(_Bool: &enabled, default: true, forKey: "enabled")
-		preferences.register(_Bool: &enableSileo, default: true, forKey: "enableSileo")
-		preferences.register(_Bool: &enableSaily, default: true, forKey: "enableSaily")
-        preferences.register(_Bool: &enableZebra, default: true, forKey: "enableZebra")
-        preferences.register(_Bool: &enableInstaller, default: true, forKey: "enableInstaller")
-		preferences.register(_Bool: &useCyDown, default: false, forKey: "useCyDown")
+		preferences.register(_Bool: &enabledI,         default: true,  forKey: "enabled")
+		preferences.register(_Bool: &enableSileoI,     default: true,  forKey: "enableSileo")
+		preferences.register(_Bool: &enableSailyI,     default: true,  forKey: "enableSaily")
+        preferences.register(_Bool: &enableZebraI,     default: true,  forKey: "enableZebra")
+        preferences.register(_Bool: &enableInstallerI, default: true,  forKey: "enableInstaller")
+		preferences.register(_Bool: &useCyDownI,       default: false, forKey: "useCyDown")
+        
+        enabled         = enabledI.boolValue
+        enableSileo     = enableSileoI.boolValue
+        enableSaily     = enableSailyI.boolValue
+        enableInstaller = enableInstallerI.boolValue
+        enableZebra     = enableZebraI.boolValue
+        useCyDown       = useCyDownI.boolValue
 	}
 }

@@ -14,8 +14,6 @@ $(TWEAK_NAME)_FILES = $(shell find Sources/$(TWEAK_NAME) -name '*.swift') $(shel
 $(TWEAK_NAME)_SWIFTFLAGS = -ISources/$(TWEAK_NAME)C/include
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc -ISources/$(TWEAK_NAME)C/include
 
-ARCHS = arm64 arm64e
-
 BUNDLE_NAME = ErikaPrefs
 $(BUNDLE_NAME)_FILES = $(shell find Sources/$(BUNDLE_NAME) -name '*.swift')
 $(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles

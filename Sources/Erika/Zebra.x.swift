@@ -18,8 +18,8 @@ class ZebraHook: ClassHook<UIViewController> {
     // orion:new
     @objc func erikaDownload() {
         guard let package = target.package.identifier else { return }
-        guard let version = target.package.version else { return }
+        guard let version = target.package.version    else { return }
         
-        ErikaController.shared.displayGui(withTitle: package, version: version)
+        ec.displayErika(withPackage: package, andVersion: version)
     }
 }

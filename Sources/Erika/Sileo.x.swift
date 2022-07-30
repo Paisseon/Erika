@@ -9,26 +9,21 @@ class SileoHook: ClassHook<UIImageView> {
 	func didMoveToWindow() {
 		orig.didMoveToWindow()
 		
-		if target.center == CGPoint(x: 46, y: 46) { // ensure that only the depiction views have a recogniser
-			let thisStack = (objc_getClass("TRDBStatusView") != nil) ? target.superview?.superview : target.superview // if using tweakreviewsdb, we have to go 2 superviews up for the correct UIStackView— otherwise go 1
+		if target.center == CGPoint(x: 46, y: 46) {
+			let thisStack = (objc_getClass("TRDBStatusView") != nil) ? target.superview?.superview : target.superview
 			
-			ErikaController.shared.refreshSileoInfo(thisStack)                                                 // get current tweak info
-			target.isUserInteractionEnabled = true                                                             // allow it to be tapped
-			let tapGesture = UITapGestureRecognizer(target: target, action: #selector(self.erikaDownload)) // create a gesture recogniser
-			target.addGestureRecognizer(tapGesture)                                                            // add it to the view
+			ec.refreshSileoInfo(for: thisStack)
+			target.isUserInteractionEnabled = true
+			let tapGesture = UITapGestureRecognizer(target: target, action: #selector(self.erikaDownload))
+			target.addGestureRecognizer(tapGesture)
 		}
 	}
 	
 	// orion:new
 	@objc func erikaDownload() {
-		guard let package = ErikaController.shared.sileoInfo?.components(separatedBy: " ")[0] else {
-			return
-		} // get the bundle id
+		let package = ec.sileoInfo.components(separatedBy: " ")[0]
+        let version = ec.sileoInfo.components(separatedBy: " ")[1].replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "")
 		
-		guard let version = ErikaController.shared.sileoInfo?.components(separatedBy: " ")[1].replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "") else {
-			return
-		} // get the version number
-		
-		ErikaController.shared.displayGui(withTitle: package, version: version)
+		ec.displayErika(withPackage: package, andVersion: version)
 	}
 }
