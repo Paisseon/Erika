@@ -1,5 +1,5 @@
 SYSROOT = $(THEOS)/sdks/iPhoneOS16.0.sdk/
-ARCHS = arm64 arm64e
+ARCHS = arm64
 TARGET = iphone:clang:latest:13.0
 
 FINALPACKAGE = 1
@@ -11,9 +11,8 @@ USING_JINX = 1
 INSTALL_TARGET_PROCESSES = chromatic Sileo
 
 LIBRARY_NAME = Erika
-$(LIBRARY_NAME)_FILES = $(shell find Sources/$(LIBRARY_NAME) -name '*.swift') $(shell find Sources/$(LIBRARY_NAME)C -name '*.m' -o -name '*.c' -o -name '*.mm' -o -name '*.cpp')
+$(LIBRARY_NAME)_FILES = Sources/load.s $(shell find Sources/$(LIBRARY_NAME) -name '*.swift')
 $(LIBRARY_NAME)_SWIFTFLAGS = -ISources/$(LIBRARY_NAME)C/include
-$(LIBRARY_NAME)_CFLAGS = -fobjc-arc -ISources/$(LIBRARY_NAME)C/include
 
 include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/library.mk

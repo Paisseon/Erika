@@ -66,7 +66,7 @@ let swiftFlags: [String] = libFlags + [
 
 let package = Package(
     name: "Erika",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(deploymentTarget)],
     products: [
         .library(
             name: "Erika",
@@ -75,13 +75,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ErikaC",
-            cSettings: [.unsafeFlags(cFlags)],
-            cxxSettings: [.unsafeFlags(cxxFlags)]
-        ),
-        .target(
             name: "Erika",
-            dependencies: ["ErikaC"],
             swiftSettings: [.unsafeFlags(swiftFlags)]
         ),
     ]

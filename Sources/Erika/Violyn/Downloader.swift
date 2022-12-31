@@ -108,14 +108,19 @@ struct Downloader {
                 return 404
             }
             
-            if let range: Range<String.Index> = contents.range(of: #"\d{10}(?=.d)"#, options: .regularExpression) {
-                return Int64(contents[range].description) ?? 0
+            if let range: Range<String.Index> = contents.range(of: #"\d{10}(?=.d)"#, options: .regularExpression),
+               let ret: Int64 = .init(contents[range].description)
+            {
+                return ret
             }
+            
+            return 0
         } catch {
             await Progress.shared.setLabel(error.localizedDescription)
             await Progress.shared.clear()
+            
+            sleep(5)
+            return 0
         }
-        
-        return 0
     }
 }

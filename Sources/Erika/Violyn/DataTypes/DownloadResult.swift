@@ -26,7 +26,7 @@ enum DownloadResult {
             case .save:
                 return "Couldn't save downloaded deb to files"
             case .success:
-                return "Success!"
+                return "<Very good>!!"
         }
     }
 }

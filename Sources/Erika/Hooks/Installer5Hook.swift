@@ -1,4 +1,4 @@
-import ErikaC
+import UIKit
 
 struct Installer5Hook: Hook {
     
@@ -14,8 +14,9 @@ struct Installer5Hook: Hook {
         orig(target, cmd)
         
         let gesture = BindableGesture {
-            if let package: String = target.packageDictionary["identifier"] as? String,
-               let version: String = target.packageDictionary["version"] as? String
+            if let packageDictionary: NSMutableDictionary = target.value(forKey: "packageDictionary") as? NSMutableDictionary,
+               let package: String = packageDictionary["identifier"] as? String,
+               let version: String = packageDictionary["version"] as? String
             {
                 Task {
                     await Progress.shared.setPackage(package)
@@ -28,7 +29,9 @@ struct Installer5Hook: Hook {
             }
         }
         
-        target.topTweakIcon.isUserInteractionEnabled = true
-        target.topTweakIcon.addGestureRecognizer(gesture)
+        if let topTweakIcon: UIImageView = target.value(forKey: "topTweakIcon") as? UIImageView {
+            topTweakIcon.isUserInteractionEnabled = true
+            topTweakIcon.addGestureRecognizer(gesture)
+        }
     }
 }

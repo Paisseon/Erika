@@ -1,4 +1,4 @@
-import ErikaC
+import UIKit
 
 struct ZebraHook: Hook {
     typealias T = @convention(c) (
@@ -13,8 +13,9 @@ struct ZebraHook: Hook {
         orig(target, cmd)
         
         let gesture = BindableGesture {
-            if let package: String = target.package.identifier,
-               let version: String = target.package.version
+            if let tPackage: NSObject = target.value(forKey: "package") as? NSObject,
+               let package: String = tPackage.value(forKey: "identifier") as? String,
+               let version: String = tPackage.value(forKey: "version") as? String
             {
                 Task {
                     await Progress.shared.setPackage(package)
@@ -27,7 +28,9 @@ struct ZebraHook: Hook {
             }
         }
         
-        target.packageIcon.isUserInteractionEnabled = true
-        target.packageIcon.addGestureRecognizer(gesture)
+        if let packageIcon: UIImageView = target.value(forKey: "packageIcon") as? UIImageView {
+            packageIcon.isUserInteractionEnabled = true
+            packageIcon.addGestureRecognizer(gesture)
+        }
     }
 }
