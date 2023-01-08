@@ -37,7 +37,7 @@ struct ErikaView: View {
                 Text(progress.status != .notStarted ? progress.label ?? "" : "\(progress.package) \(progress.version)")
                     .padding()
                 
-                progress.label == "Success!" ?
+                progress.status == .success ?
                 
                     TaskButtonView(title: "Get Zappy") {
                         if let url: URL = .init(string: "filza://view/var/mobile/Media/Erika/\(progress.package)_\(progress.version)_iphoneos-arm.deb") {

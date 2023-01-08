@@ -1,3 +1,4 @@
+import Jinx
 import UIKit
 
 struct SailyLabelHook: Hook {
@@ -10,7 +11,7 @@ struct SailyLabelHook: Hook {
     let `class`: AnyClass? = UILabel.self
     let selector: Selector = #selector(setter: UILabel.text)
     let replacement: T = { target, cmd, text in
-        let orig: T = PowPow.unwrap(SailyLabelHook.self)!
+        let orig: T = PowPow.orig(SailyLabelHook.self)!
         let copyMeta: String = NSLocalizedString("COPY_META", comment: "<Oh, yeeeeeeeeaah>!! <Very goooooooooooood>!! <One more>!!")
         
         if text == copyMeta {

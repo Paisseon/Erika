@@ -1,14 +1,15 @@
 import Foundation
+import Jinx
 
 struct Tweak {
-    static let config: Config = .jinx
-
     static func ctor() {
         guard let bundleID: String = Bundle.main.bundleIdentifier,
               let app: ErikaApp = .init(rawValue: bundleID)
         else {
             return
         }
+        
+        PowPow.native = .jinx
 
         Installer5Hook().hook(onlyIf: app == .installer)
         SailyHook().hook(onlyIf: app == .saily)
@@ -21,4 +22,9 @@ struct Tweak {
             let _ = Observer.shared
         }
     }
+}
+
+@_cdecl("jinx_entry")
+func jinx_entry() {
+    Tweak.ctor()
 }

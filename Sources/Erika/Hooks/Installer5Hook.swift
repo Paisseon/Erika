@@ -1,7 +1,7 @@
+import Jinx
 import UIKit
 
 struct Installer5Hook: Hook {
-    
     typealias T = @convention(c) (
         UIViewController,
         Selector
@@ -10,7 +10,7 @@ struct Installer5Hook: Hook {
     let `class`: AnyClass? = objc_getClass("DepictionViewController") as? AnyClass
     let selector: Selector = #selector(UIViewController.viewDidLoad)
     let replacement: T = { target, cmd in
-        let orig: T = PowPow.unwrap(Installer5Hook.self)!
+        let orig: T = PowPow.orig(Installer5Hook.self)!
         orig(target, cmd)
         
         let gesture = BindableGesture {
@@ -22,7 +22,7 @@ struct Installer5Hook: Hook {
                     await Progress.shared.setPackage(package)
                     await Progress.shared.setVersion(version)
                     
-                    DispatchQueue.main.async {
+                    await MainActor.run {
                         ErikaWindow.shared.makeKeyAndVisible()
                     }
                 }

@@ -1,3 +1,4 @@
+import Jinx
 import UIKit
 
 struct SileoLabelHook: Hook {
@@ -9,7 +10,7 @@ struct SileoLabelHook: Hook {
     let `class`: AnyClass? = objc_getClass("Sileo.DepictionSubheaderView") as? AnyClass
     let selector: Selector = #selector(UIView.didMoveToWindow)
     let replacement: T = { target, cmd in
-        let orig: T = PowPow.unwrap(SileoLabelHook.self)!
+        let orig: T = PowPow.orig(SileoLabelHook.self)!
         orig(target, cmd)
 
         if let label: String = (target.subviews.first as? UILabel)?.text,

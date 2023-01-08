@@ -1,3 +1,4 @@
+import Jinx
 import UIKit
 
 struct SileoHook: Hook {
@@ -9,7 +10,7 @@ struct SileoHook: Hook {
     let `class`: AnyClass? = objc_getClass("Sileo.PackageIconView") as? AnyClass
     let selector: Selector = #selector(UIView.didMoveToWindow)
     let replacement: T = { target, cmd in
-        let orig: T = PowPow.unwrap(SileoHook.self)!
+        let orig: T = PowPow.orig(SileoHook.self)!
         orig(target, cmd)
         
         guard target.center == CGPoint(x: 46, y: 46) else {

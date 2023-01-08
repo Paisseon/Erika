@@ -1,3 +1,4 @@
+import Jinx
 import UIKit
 
 struct ZebraHook: Hook {
@@ -9,7 +10,7 @@ struct ZebraHook: Hook {
     let `class`: AnyClass? = objc_getClass("ZBPackageDepictionViewController") as? AnyClass
     let selector: Selector = #selector(UIViewController.viewDidLoad)
     let replacement: T = { target, cmd in
-        let orig: T = PowPow.unwrap(ZebraHook.self)!
+        let orig: T = PowPow.orig(ZebraHook.self)!
         orig(target, cmd)
         
         let gesture = BindableGesture {
@@ -21,7 +22,7 @@ struct ZebraHook: Hook {
                     await Progress.shared.setPackage(package)
                     await Progress.shared.setVersion(version)
 
-                    DispatchQueue.main.async {
+                    await MainActor.run {
                         ErikaWindow.shared.makeKeyAndVisible()
                     }
                 }
