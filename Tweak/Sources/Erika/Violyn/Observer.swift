@@ -5,7 +5,7 @@ final class Observer {
     var currentDepiction: UIViewController? = nil
     
     private init() {
-        if Bundle.main.bundleIdentifier == ErikaApp.saily.rawValue {
+        if CommandLine.arguments[0].hasSuffix("chromatic") {
             NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(self.handleCopy),
@@ -15,27 +15,15 @@ final class Observer {
         }
     }
     
-    @objc
-    func handleCopy() {
+    @objc private func handleCopy() {
         guard let control: String = UIPasteboard.general.string,
               let pRange: Range<String.Index> = control.range(of: #"(?<=package:\s)[^\s]*\b"#, options: .regularExpression),
               let vRange: Range<String.Index> = control.range(of: #"(?<=version:\s)[^\s]*\b"#, options: .regularExpression)
         else {
             return
         }
-
-        Task {
-            await Progress.shared.setPackage(String(control[pRange]))
-            await Progress.shared.setVersion(String(control[vRange]))
-
-            DispatchQueue.main.async { [self] in
-                if let currentDepiction,
-                   ErikaWindow.shared.rootViewController != nil,
-                   currentDepiction.presentedViewController !== ErikaWindow.shared.rootViewController
-                {
-                    currentDepiction.present(ErikaWindow.shared.rootViewController!, animated: true)
-                }
-            }
-        }
+        
+        ErikaWindow.shared.package = control[pRange].description
+        ErikaWindow.shared.version = control[vRange].description
     }
 }

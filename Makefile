@@ -1,33 +1,34 @@
 # Basic environment configuration
 
-SYSROOT = $(THEOS)/sdks/iPhoneOS16.0.sdk/
-ARCHS = arm64
-TARGET = iphone:clang:latest:13.0
+export SYSROOT = $(THEOS)/sdks/iPhoneOS16.0.sdk/
+export TARGET = iphone:clang:latest:13.0
+export ROOTLESS = 1
 
 # Theos optimisations
 
-FINALPACKAGE = 1
-DEBUG = 0
-THEOS_LEAN_AND_MEAN = 1
-USING_JINX = 1
+export FINALPACKAGE = 1
+export DEBUG = 0
+export THEOS_LEAN_AND_MEAN = 1
+export USING_JINX = 1
 
-# Processes die if they are killed
+# Define subprojects
 
-INSTALL_TARGET_PROCESSES = chromatic
-
-# Make Jinx work from SPM
-
-XCDD_TOP = $(HOME)/Library/Developer/Xcode/DerivedData/
-XCDD_MID = $(shell basename $(XCDD_TOP)/$(PWD)*)
-XCDD_BOT = /SourcePackages/checkouts/Jinx/Sources/Jinx
-JINX_LOC = $(XCDD_TOP)$(XCDD_MID)$(XCDD_BOT)
-
-# Define included files, imported frameworks, etc.
-
-LIBRARY_NAME = Erika
-$(LIBRARY_NAME)_FILES = Sources/load.s $(shell find Sources/$(LIBRARY_NAME) -name '*.swift') $(shell find $(JINX_LOC) -name '*.swift')
+SUBPROJECTS += Tweak
 
 # Theos makefiles to include
 
 include $(THEOS)/makefiles/common.mk
-include $(THEOS_MAKE_PATH)/library.mk
+include $(THEOS_MAKE_PATH)/aggregate.mk
+
+# Rootless support? with a question mark
+
+ifeq ($(ROOTLESS),1)
+internal-stage::
+	@$(PRINT_FORMAT_MAKING) "Moving files to rootless paths"
+	$(ECHO_NOTHING)mkdir -p "$(THEOS_STAGING_DIR)/var/jb/Library"$(ECHO_END)
+	$(ECHO_NOTHING)mv "$(THEOS_STAGING_DIR)/Library" "$(THEOS_STAGING_DIR)/var/jb"$(ECHO_END)
+
+before-package::
+	@$(PRINT_FORMAT_MAKING) "Patching control file architecture"
+	$(ECHO_NOTHING)sed -i '' 's/iphoneos-arm/iphoneos-arm64/' "$(THEOS_STAGING_DIR)/DEBIAN/control"$(ECHO_END)
+endif

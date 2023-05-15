@@ -1,12 +1,12 @@
 Package: emt.paisseon.erika
 Name: Erika
-Version: 1.10.3
+Version: 1.12.0
 Architecture: iphoneos-arm
-Description: Download paid tweaks for free
-Maintainer: Lilliana
-Author: Lilliana
+Description: Piracy downloader for Sileo
+Maintainer: Paisseon
+Author: Paisseon
 Section: Tweaks (Piracy)
-Icon: https://paisseon.github.io/icons/erika.png
-Depends: firmware (>= 12.2), firmware (>= 15.0) | lilliana.async
+Depends: mobilesubstrate, lilliana.async | firmware (>= 15.0)
 SileoDepiction: https://paisseon.github.io/depictions/Erika.json
-Depiction: Depiction: https://pinpal.github.io/Sileo-Depiction-WebViews/?json=https://paisseon.github.io/depictions/Erika.json&name=Erika&dev=Lilliana
+Depiction: https://pinpal.github.io/Sileo-Depiction-WebViews/?json=https://paisseon.github.io/depictions/Erika.json&name=Erika&dev=Paisseon
+Icon: https://paisseon.github.io/icons/Erika.png

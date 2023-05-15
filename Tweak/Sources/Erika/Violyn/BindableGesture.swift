@@ -3,9 +3,7 @@ import UIKit
 final class BindableGesture: UITapGestureRecognizer {
     private var action: () -> Void
     
-    init(
-        action: @escaping () -> Void
-    ) {
+    init(action: @escaping () -> Void) {
         self.action = action
         super.init(target: nil, action: nil)
         self.addTarget(self, action: #selector(execute))
@@ -15,3 +13,4 @@ final class BindableGesture: UITapGestureRecognizer {
         action()
     }
 }
+
