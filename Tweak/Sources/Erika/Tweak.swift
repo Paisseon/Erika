@@ -1,30 +1,34 @@
 import Jinx
+import ObjectiveC
 
 struct Tweak {
     static func ctor() {
         let binName: String = CommandLine.arguments[0]
+        let erikaPath: String = "/var/mobile/Media/Erika/"
         
-        if binName.hasSuffix("Sileo") {
-            SileoHook().hook()
-            SileoLabelHook().hook()
-            
-            return
+        if access(erikaPath, F_OK) != 0 {
+            mkdir(erikaPath, S_IRWXU | S_IRWXG | S_IRWXO)
+        }
+        
+        if access(erikaPath + "SavedPackages", F_OK) != 0 {
+            mkdir(erikaPath + "SavedPackages", S_IRWXU | S_IRWXG | S_IRWXO)
         }
         
         if binName.hasSuffix("chromatic") {
             SailyHook().hook()
-            SailyLabelHook().hook()
-            
-            return
+            SailyDownloadHook().hook()
+        }
+        
+        if binName.hasSuffix("Sileo") {
+            SileoHook().hook()
+            SileoDownloadHook(cls: objc_lookUpClass("Evander.EvanderDownloadDelegate")).hook()
+            SileoPiracyHook().hook()
         }
         
         if binName.hasSuffix("Zebra") {
+            SileoDownloadHook(cls: objc_lookUpClass("ZBDownloadManager")).hook()
             ZebraHook().hook()
-            
-            return
         }
-        
-        Installer5Hook().hook() // I forgor the binary name and too lazy to look it up 💀
     }
 }
 

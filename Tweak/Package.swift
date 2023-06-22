@@ -26,12 +26,16 @@ let package: Package = .init(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/Paisseon/Jinx.git", branch: "development")
+        .package(url: "https://github.com/Paisseon/Jinx.git", branch: "development"),
+        .package(url: "https://github.com/Paisseon/Chomikuj.git", branch: "emt")
     ],
     targets: [
         .target(
             name: "Erika",
-            dependencies: [.product(name: "Jinx", package: "Jinx")],
+            dependencies: [
+                .product(name: "Jinx", package: "Jinx"),
+                .product(name: "Chomikuj", package: "Chomikuj")
+            ],
             swiftSettings: [.unsafeFlags(swiftFlags)]
         )
     ]

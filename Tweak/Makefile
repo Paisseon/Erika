@@ -8,19 +8,19 @@ endif
 
 # Processes die if they are killed
 
-INSTALL_TARGET_PROCESSES = Sileo
+INSTALL_TARGET_PROCESSES = chromatic Sileo Zebra
 
 # Make Jinx work from SPM
 
-♎ = $(HOME)/Library/Developer/Xcode/DerivedData
-♍ = $(shell find $(♎) -maxdepth 1 -type d -name "Tweak-*" -exec ls -td {} + | head -n 1)
-♌ = /SourcePackages/checkouts/Jinx/Sources/Jinx
-♏ = $(♍)$(♌)
+XCDC = $(HOME)/Library/Developer/Xcode/DerivedData
+XCDD = $(shell find $(XCDC) -maxdepth 1 -type d -name "Tweak-*" -exec ls -td {} + | head -n 1)
+JINX = $(XCDD)/SourcePackages/checkouts/Jinx/Sources/Jinx
+CHMK = $(XCDD)/SourcePackages/checkouts/Chomikuj/Sources/Chomikuj
 
 # Define included files, imported frameworks, etc.
 
 LIBRARY_NAME = Erika
-$(LIBRARY_NAME)_FILES = Sources/load.s $(shell find Sources/$(LIBRARY_NAME) -name '*.swift') $(shell find $(♏) -name '*.swift')
+$(LIBRARY_NAME)_FILES = Sources/load.s $(shell find Sources/$(LIBRARY_NAME) -name '*.swift') $(shell find $(JINX) -name '*.swift') $(shell find $(CHMK) -name '*.swift')
 
 # Theos makefiles to include
 

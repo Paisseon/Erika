@@ -3,7 +3,7 @@ import SwiftUI
 import UIKit
 
 private enum Status: String {
-    case error = "❎ Error"
+    case error = "❌ Error"
     case notStarted = "🏴‍☠️ Erika"
     case success = "✅ Success"
     case waiting = "⏳ Waiting"
@@ -44,7 +44,7 @@ struct ErikaView: View {
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                 
-                Text(status != .notStarted ? progress : "\(package) \(version)")
+                Text(status != .notStarted ? progress : "\(CurrentTweak.displayName) \(version)")
                     .padding()
                     .foregroundColor(.white)
                 
@@ -80,7 +80,7 @@ struct ErikaView: View {
         
         Task {
             do {
-                try await Downloader.download(package: package, version: version)
+                try await ErikaDownloader.download(package: package, version: version)
                 status = .success
                 progress = "<Very good!>"
             } catch {
@@ -91,9 +91,10 @@ struct ErikaView: View {
     }
     
     private func getZappy() {
-        let fileName: String = "/var/mobile/Media/Erika/\(package)_\(version)_iphoneos-arm.deb".withRootPath()
+        let fileName: String = "/var/mobile/Media/Erika/\(package)_v\(version)_iphoneos-arm.deb".withRootPath()
         
         if let url: URL = .init(string: "filza://view/\(fileName)") {
+            dontGetZappy()
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
@@ -102,12 +103,13 @@ struct ErikaView: View {
         UIView.animate(withDuration: 0.5, animations: { ErikaWindow.shared.alpha = 0 }) { isDone in
             if isDone {
                 ErikaWindow.shared.isHidden = true
-                ErikaWindow.shared.package = package
-                ErikaWindow.shared.version = version
+                
+                CurrentTweak.package = package
+                CurrentTweak.version = version
             }
         }
         
-        if let currentDepiction: UIViewController = Observer.shared.currentDepiction {
+        if let currentDepiction: UIViewController = CurrentTweak.currentDepiction {
             currentDepiction.presentedViewController?.dismiss(animated: true)
         }
     }

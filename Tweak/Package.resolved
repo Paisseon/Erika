@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "chomikuj",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Paisseon/Chomikuj.git",
+      "state" : {
+        "branch" : "emt",
+        "revision" : "5dd2ad63776fa1caa914c3255cc2312dc78c2881"
+      }
+    },
+    {
       "identity" : "jinx",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Paisseon/Jinx.git",

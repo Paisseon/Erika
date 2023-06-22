@@ -1,12 +1,12 @@
 {
 	Filter = {
 		Bundles = (
-			"wiki.qaq.chromatic.release",
 			"org.coolstar.SileoStore",
-			"me.apptapp.installer",
-			"xyz.willy.Zebra",
 			"org.coolstar.SileoBeta",
 			"org.coolstar.SileoNightly",
+			"wiki.qaq.chromatic.release",
+			"xyz.willy.Zebra",
+			"ml.singlekeycap.sileo",
 		);
 	};
 }
